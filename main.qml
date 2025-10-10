@@ -24,6 +24,7 @@ ApplicationWindow{
 
     Settings{
         id: apps
+        fileName: './unika.cfg'
         property string nombreReceptor: 'pantalla'
         property string jsonFilePath: './command_examples.json'
         property bool dev: false
@@ -72,23 +73,64 @@ ApplicationWindow{
     Item{
         id: xApp
         anchors.fill: parent
-        Row{
+        Column{
             anchors.centerIn: parent
-            ComList{
-                id: comList
-                width: xApp.width*0.5
-                height: xApp.height
-            }
-            LogView{
-                id: log
-                width: xApp.width*0.5
-                height: xApp.height
-                color: apps.backgroundColor
-                border.width: 2
+            Rectangle{
+                id: xTop
+                width: xApp.width
+                height: app.fs*3
+                color: 'transparent'
+                border.width: 1
                 border.color: apps.fontColor
-                //                Rectangle{
-                //                    anchors.fill: parent
-                //                }
+                Row{
+                    spacing: app.fs*0.5
+                    anchors.centerIn: parent
+                    Text{
+                        text: '<b>Archivo de Comandos:</b>'
+                        color: apps.fontColor
+                        font.pixelSize: app.fs*0.5
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+                    Rectangle{
+                        width: app.fs*20
+                        height: app.fs
+                        color: 'transparent'
+                        border.width: 2
+                        border.color: apps.fontColor
+                        clip: true
+                        TextInput{
+                            id: tiJsonFilePath
+                            text: apps.jsonFilePath
+                            width: parent.width-app.fs*0.25
+                            color: apps.fontColor
+                            font.pixelSize: app.fs*0.5
+                            anchors.centerIn: parent
+                            onTextChanged: {
+                                apps.jsonFilePath=text
+                                comList.loadComs(apps.jsonFilePath)
+                            }
+                        }
+                    }
+                }
+            }
+            Row{
+
+                ComList{
+                    id: comList
+                    width: xApp.width*0.5
+                    height: xApp.height-app.fs*3
+                }
+                LogView{
+                    id: log
+                    width: xApp.width*0.5
+                    height: xApp.height-app.fs*3
+                    color: apps.backgroundColor
+                    border.width: 2
+                    border.color: apps.fontColor
+                    //                Rectangle{
+                    //                    anchors.fill: parent
+                    //                }
+                }
             }
         }
 
@@ -111,6 +153,10 @@ ApplicationWindow{
     Shortcut{
         sequence: 'Ctrl+r'
         onActivated: comList.loadComs(apps.jsonFilePath)
+    }
+    Shortcut{
+        sequence: 'Ctrl+i'
+        onActivated: tiJsonFilePath.focus=true
     }
     Shortcut{
         sequence: 'Ctrl+f'
@@ -180,40 +226,5 @@ ApplicationWindow{
         if(apps.dev)log.lv('cf '+idName+': '+cf)
 
         let comp=Qt.createQmlObject(cf, xuqps, 'uqp-code-'+idName)
-    }
-    function proc(c){
-        let cmd=''
-        if(c===apps.nombreReceptor+' cambiar ventana'){
-            log.lv('Procesando el comando: ['+c+']')
-            cmd='sh /home/ns/nsp/unika/scripts/cambiarVentana.sh'
-            if(apps.dev)log.lv('cmd:['+cmd+']')
-            runScript(cmd)
-        }
-        if(c===apps.nombreReceptor+' avanza una ventana'){
-            log.lv('Procesando el comando: ['+c+']')
-            cmd='sh /home/ns/nsp/unika/scripts/avanzaUnaVentana.sh'
-            if(apps.dev)log.lv('cmd:['+cmd+']')
-            runScript(cmd)
-        }
-        if(c===apps.nombreReceptor+' retrocede una ventana'){
-            log.lv('Procesando el comando: ['+c+']')
-            cmd='sh /home/ns/nsp/unika/scripts/retrocedeUnaVentana.sh'
-            if(apps.dev)log.lv('cmd:['+cmd+']')
-            runScript(cmd)
-        }
-        if(c===apps.nombreReceptor+' avanza dos ventanas'){
-            log.lv('Procesando el comando: ['+c+']')
-            cmd='sh /home/ns/nsp/unika/scripts/avanzaDosVentanas.sh'
-            if(apps.dev)log.lv('cmd:['+cmd+']')
-            runScript(cmd)
-        }
-        if(c===apps.nombreReceptor+' retrocede dos ventanas'){
-            log.lv('Procesando el comando: ['+c+']')
-            cmd='sh /home/ns/nsp/unika/scripts/retrocedeDosVentanas.sh'
-            if(apps.dev)log.lv('cmd:['+cmd+']')
-            runScript(cmd)
-        }
-
-
     }
 }
