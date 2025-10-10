@@ -16,20 +16,42 @@ ApplicationWindow{
     UniKey{id: u}
     Settings{
         id: apps
+        property string nombreReceptor: 'pantalla'
+        property bool dev: false
         property color backgroundColor: 'black'
         property color fontColor: 'white'
+        property string audioFrom
+
+        onDevChanged: {
+            if(dev){
+                log.lv('Se activó el modo Desarrollador.')
+            }else{
+                log.lv('Se desactivó el modo Desarrollador.')
+            }
+        }
     }
     UnikQProcess{
         id: uqp
         onLogDataChanged: {
-            log.lv(logData)
+            //log.lv(logData)
             if(logData.indexOf('unika::')===0){
-                log.lv('Recibiendo: '+logData)
+                if(apps.dev)log.lv('Recibiendo: '+logData)
+                if(logData.indexOf('unika::FINAL')===0){
+                    log.lv('Recibiendo: '+logData)
+                    console.log('0['+logData+']')
+                    let c=logData.replace(/[\r\n]+/g, '').replace('unika::FINAL: ', '')
+                    log.lv('0['+c+']')
+                    if(apps.dev)log.lv('proc('+c+')')
+                    log.lv('1['+c+']')
+                    proc(c)
+                }
             }
         }
+        onFinished: {
+            log.lv('Proceso terminado.')
+        }
         Component.onCompleted: {
-            let cmd='sh '+u.currentFolderPath()+'/init.sh'
-            run(cmd)
+            init()
         }
     }
     Item{
@@ -58,8 +80,116 @@ ApplicationWindow{
         }
 
     }
+    Item{id: xuqps}
     Shortcut{
         sequence: 'Esc'
         onActivated: Qt.quit()
+    }
+    Shortcut{
+        sequence: 'Ctrl+d'
+        onActivated: apps.dev=!apps.dev
+    }
+    Shortcut{
+        sequence: 'Ctrl+f'
+        onActivated: {
+            uqp.kill()
+            if(apps.audioFrom==='rtmp'){
+                apps.audioFrom='mic'
+            }else{
+                apps.audioFrom='rtmp'
+            }
+            init()
+        }
+    }
+    function init(){
+        let from='init.sh'
+        if(apps.audioFrom==='rtmp'){
+            from='initFromRtmp.sh'
+        }
+        let cmd='sh '+u.currentFolderPath()+'/'+from
+        uqp.run(cmd)
+    }
+    function getUqpCode(idName, cmd, onLogDataCode, onFinishedCode, onCompleteCode){
+        let c='import QtQuick 2.0\n'
+        c+='import unik.UnikQProcess 1.0\n'
+        c+='Item{\n'
+        c+='        id: item'+idName+'\n'
+        c+='    UnikQProcess{\n'
+        c+='        id: '+idName+'\n'
+        c+='        onFinished:{\n'
+        c+='        '+onFinishedCode
+        c+='        '+idName+'.destroy(0)\n'
+        c+='        }\n'
+        c+='        onLogDataChanged:{\n'
+        c+='        '+onLogDataCode
+        c+='        }\n'
+        c+='        Component.onCompleted:{\n'
+        c+='        '+onCompleteCode
+        c+='            let cmd=\''+cmd+'\'\n'
+        c+='            run(cmd)\n'
+        c+='        }\n'
+        c+='    }\n'
+        c+='}\n'
+        return c
+    }
+    function runScript(commandLine){
+        let c=''
+
+        c='log.lv("Ejecutando ['+commandLine+']...")\n'
+        let onCompleteCode=c
+
+        c='uqpRunScript'
+        let idName=c
+
+        c=''+commandLine
+        let cmd=c
+
+        c='        log.lv("Salida de ['+commandLine+']:"+logData)\n'
+        let onLogDataCode=c
+
+
+        c='        log.lv("Finalizó ['+commandLine+']")\n'
+        c='        item'+idName+'.destroy(0)\n'
+        let onFinishedCode=c
+
+        let cf=getUqpCode(idName, cmd, onLogDataCode, onFinishedCode, onCompleteCode)
+
+        if(apps.dev)log.lv('cf '+idName+': '+cf)
+
+        let comp=Qt.createQmlObject(cf, xuqps, 'uqp-code-'+idName)
+    }
+    function proc(c){
+        let cmd=''
+        if(c===apps.nombreReceptor+' cambiar ventana'){
+            log.lv('Procesando el comando: ['+c+']')
+            cmd='sh /home/ns/nsp/unika/scripts/cambiarVentana.sh'
+            if(apps.dev)log.lv('cmd:['+cmd+']')
+            runScript(cmd)
+        }
+        if(c===apps.nombreReceptor+' avanza una ventana'){
+            log.lv('Procesando el comando: ['+c+']')
+            cmd='sh /home/ns/nsp/unika/scripts/avanzaUnaVentana.sh'
+            if(apps.dev)log.lv('cmd:['+cmd+']')
+            runScript(cmd)
+        }
+        if(c===apps.nombreReceptor+' retrocede una ventana'){
+            log.lv('Procesando el comando: ['+c+']')
+            cmd='sh /home/ns/nsp/unika/scripts/retrocedeUnaVentana.sh'
+            if(apps.dev)log.lv('cmd:['+cmd+']')
+            runScript(cmd)
+        }
+        if(c===apps.nombreReceptor+' avanza dos ventanas'){
+            log.lv('Procesando el comando: ['+c+']')
+            cmd='sh /home/ns/nsp/unika/scripts/avanzaDosVentanas.sh'
+            if(apps.dev)log.lv('cmd:['+cmd+']')
+            runScript(cmd)
+        }
+        if(c===apps.nombreReceptor+' retrocede dos ventanas'){
+            log.lv('Procesando el comando: ['+c+']')
+            cmd='sh /home/ns/nsp/unika/scripts/retrocedeDosVentanas.sh'
+            if(apps.dev)log.lv('cmd:['+cmd+']')
+            runScript(cmd)
+        }
+
     }
 }
