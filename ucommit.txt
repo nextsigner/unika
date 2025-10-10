@@ -1,1 +1,1 @@
-i7: Se agrega script verNavegador.sh
+i7: Se agrega ComList

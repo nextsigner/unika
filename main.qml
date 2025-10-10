@@ -5,6 +5,9 @@ import Qt.labs.settings 1.0
 import unik.UnikQProcess 1.0
 import LogView 1.0
 import UniKey 1.0
+
+import ComList 1.0
+
 ApplicationWindow{
     id: app
     visible: true
@@ -14,9 +17,15 @@ ApplicationWindow{
     height: Screen.height
     property int fs: Screen.width*0.02
     UniKey{id: u}
+    onClosing: {
+        uqp.kill()
+        close.accepted = true;
+    }
+
     Settings{
         id: apps
         property string nombreReceptor: 'pantalla'
+        property string jsonFilePath: './command_examples.json'
         property bool dev: false
         property color backgroundColor: 'black'
         property color fontColor: 'white'
@@ -37,8 +46,8 @@ ApplicationWindow{
             if(logData.indexOf('unika::')===0){
                 if(apps.dev)log.lv('Recibiendo: '+logData)
                 if(logData.indexOf('unika::Parcial')===0){
-                    let s=logData.replace('unika::Parcial')
-                    log.lv('Capturando '+s)
+                    let str=logData.replace('unika::Parcial')
+                    log.lv('Capturando '+str)
                     return
                 }
                 if(logData.indexOf('unika::FINAL')===0){
@@ -48,7 +57,8 @@ ApplicationWindow{
                     //log.lv('0['+c+']')
                     if(apps.dev)log.lv('proc('+c+')')
                     //log.lv('1['+c+']')
-                    proc(c)
+                    comList.proc(c)
+                    //proc(c)
                 }
             }
         }
@@ -64,12 +74,10 @@ ApplicationWindow{
         anchors.fill: parent
         Row{
             anchors.centerIn: parent
-            Rectangle{
+            ComList{
+                id: comList
                 width: xApp.width*0.5
                 height: xApp.height
-                color: apps.backgroundColor
-                border.width: 2
-                border.color: apps.fontColor
             }
             LogView{
                 id: log
@@ -78,21 +86,31 @@ ApplicationWindow{
                 color: apps.backgroundColor
                 border.width: 2
                 border.color: apps.fontColor
-//                Rectangle{
-//                    anchors.fill: parent
-//                }
+                //                Rectangle{
+                //                    anchors.fill: parent
+                //                }
             }
         }
 
     }
     Item{id: xuqps}
+    Component.onCompleted: {
+        comList.loadComs(apps.jsonFilePath)
+    }
     Shortcut{
         sequence: 'Esc'
-        onActivated: Qt.quit()
+        onActivated: {
+            uqp.kill()
+            Qt.quit()
+        }
     }
     Shortcut{
         sequence: 'Ctrl+d'
         onActivated: apps.dev=!apps.dev
+    }
+    Shortcut{
+        sequence: 'Ctrl+r'
+        onActivated: comList.loadComs(apps.jsonFilePath)
     }
     Shortcut{
         sequence: 'Ctrl+f'
@@ -195,12 +213,7 @@ ApplicationWindow{
             if(apps.dev)log.lv('cmd:['+cmd+']')
             runScript(cmd)
         }
-        if(c===apps.nombreReceptor+' ver navegador'){
-            log.lv('Procesando el comando: ['+c+']')
-            cmd='sh /home/ns/nsp/unika/scripts/verNavegador.sh'
-            if(apps.dev)log.lv('cmd:['+cmd+']')
-            runScript(cmd)
-        }
+
 
     }
 }
