@@ -1,7 +1,7 @@
 {
-  "name": "qmlvosk",
+  "name": "unika",
   "version": "1.0.0",
-  "description": "",
+  "description": "Captura comando por voz del micrófono en Ubuntu 20.04",
   "main": "index.js",
   "dependencies": {
     "node-record-lpcm16": "^1.0.1",
@@ -9,9 +9,24 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "index.js",
+    "start": "node ./index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "nextsigner",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nextsigner/unika.git"
+  },
+  "keywords": [
+    "vosk",
+    "command",
+    "microfono",
+    "comando",
+    "voz"
+  ],
+  "bugs": {
+    "url": "https://github.com/nextsigner/unika/issues"
+  },
+  "homepage": "https://github.com/nextsigner/unika#readme"
 }

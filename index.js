@@ -49,7 +49,7 @@ recording.stream().on('data', (data) => {
         
         // El resultado es ahora un objeto JS, accedemos directamente a la propiedad 'text'
         if (result && result.text) { 
-            process.stdout.write(`\n✅ FINAL: ${result.text}\n`);
+            console.log(`unika::FINAL: ${result.text}\n`);
         }
     } else {
         // 3. Transcripción PARCIAL (AQUÍ ESTÁ LA CORRECCIÓN)
@@ -57,9 +57,7 @@ recording.stream().on('data', (data) => {
         
         // El resultado es ahora un objeto JS, accedemos directamente a la propiedad 'partial'
         if (partial && partial.partial) {
-            process.stdout.clearLine(0);
-            process.stdout.cursorTo(0);
-            process.stdout.write(`... Parcial: ${partial.partial}`);
+            console.log(`unika::Parcial: ${partial.partial}`);
         }
     }
 });
@@ -68,7 +66,7 @@ recording.stream().on('data', (data) => {
 
 recording.stream().on('error', (err) => {
     console.error(`\nError en la grabación: ${err.message}`);
-    process.exit(1);
+    //process.exit(1);
 });
 
 process.on('SIGINT', () => {
@@ -76,5 +74,5 @@ process.on('SIGINT', () => {
     record.stop();
     recognizer.free();
     model.free();
-    process.exit();
+    //process.exit();
 });
