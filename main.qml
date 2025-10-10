@@ -36,13 +36,18 @@ ApplicationWindow{
             //log.lv(logData)
             if(logData.indexOf('unika::')===0){
                 if(apps.dev)log.lv('Recibiendo: '+logData)
+                if(logData.indexOf('unika::Parcial')===0){
+                    let s=logData.replace('unika::Parcial')
+                    log.lv('Capturando '+s)
+                    return
+                }
                 if(logData.indexOf('unika::FINAL')===0){
                     log.lv('Recibiendo: '+logData)
-                    console.log('0['+logData+']')
+                    //console.log('0['+logData+']')
                     let c=logData.replace(/[\r\n]+/g, '').replace('unika::FINAL: ', '')
-                    log.lv('0['+c+']')
+                    //log.lv('0['+c+']')
                     if(apps.dev)log.lv('proc('+c+')')
-                    log.lv('1['+c+']')
+                    //log.lv('1['+c+']')
                     proc(c)
                 }
             }
@@ -187,6 +192,12 @@ ApplicationWindow{
         if(c===apps.nombreReceptor+' retrocede dos ventanas'){
             log.lv('Procesando el comando: ['+c+']')
             cmd='sh /home/ns/nsp/unika/scripts/retrocedeDosVentanas.sh'
+            if(apps.dev)log.lv('cmd:['+cmd+']')
+            runScript(cmd)
+        }
+        if(c===apps.nombreReceptor+' ver navegador'){
+            log.lv('Procesando el comando: ['+c+']')
+            cmd='sh /home/ns/nsp/unika/scripts/verNavegador.sh'
             if(apps.dev)log.lv('cmd:['+cmd+']')
             runScript(cmd)
         }
