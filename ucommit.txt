@@ -1,1 +1,1 @@
-i7: Se elimina main.qml y carpeta modules. Todo fué movido a gd/misapps/unika-gui
+i7: Se editaron algunos archivos .sh
