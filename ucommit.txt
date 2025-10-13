@@ -1,1 +1,1 @@
-i7: Se elimina env
+i7: Se elimina carpeta scripts
