@@ -1,1 +1,1 @@
-i7: Se editaron algunos archivos .sh
+i7: Se crea coms.json
