@@ -1,1 +1,1 @@
-i7: Se eliminan archivos cfg
+i7: Se elimina env
