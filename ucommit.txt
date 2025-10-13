@@ -1,1 +1,1 @@
-i7: Se elimina tts_env
+i7: Se eliminan archivos cfg
