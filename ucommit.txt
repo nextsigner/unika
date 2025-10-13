@@ -1,1 +1,1 @@
-i7: Se crea coms.json
+i7: Se elimina tts_env
