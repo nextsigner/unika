@@ -1,6 +1,6 @@
 {
   "name": "unika",
-  "version": "1.10.140",
+  "version": "1.10.141",
   "description": "Captura comando por voz del micrófono (Recomendado para Ubuntu 20.04. Contexto de funcionalidad: node v14.21.3(nvm use lts/fermium) (npm v6.14.18))",
   "main": "index.js",
   "dependencies": {
