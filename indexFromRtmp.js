@@ -47,12 +47,13 @@ const FFmpeg_ARGS = [
 const ffmpegProcess = spawn(FFmpeg_COMMAND, FFmpeg_ARGS);
 
 // --- 3. Mensajes Iniciales ---
-//console.log("=================================================");
+console.log("=================================================");
 console.log(`unika::Modelo Vosk cargado: ${MODEL_PATH}`);
 console.log(`unika::Escuchando stream RTMP: ${RTMP_URL}`);
-//console.log(`unika::Tasa de muestreo requerida: ${SAMPLE_RATE} Hz`);
-//console.log("unika::Procesando audio... (Ctrl+C para salir)");
-//console.log("=================================================");
+console.log('unika::Para hacer correr un servidor RTMP puedes hacerlo utilizando el proyecto https://github.com/nextsigner/rtmp-server\nAllí tienes un ejecutable nginx.exe el cual debes correr con del siguiente modo con la siguiente configuración: wine nginx.exe -c cM3U8.conf)\nA dicho servidor RTMP puedes enviar sonido desde cualquier aplicación que sirva a tales propósitos.\nPor ejemplo en Android: Instala ManyCam.');
+console.log(`unika::Tasa de muestreo requerida: ${SAMPLE_RATE} Hz`);
+console.log("Procesando audio... (Ctrl+C para salir)");
+console.log("=================================================");
 
 // --- 4. Conectar la Salida de FFmpeg a Vosk ---
 

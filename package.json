@@ -1,7 +1,7 @@
 {
   "name": "unika",
   "version": "1.0.0",
-  "description": "Captura comando por voz del micrófono en Ubuntu 20.04",
+  "description": "Captura comando por voz del micrófono (Recomendado para Ubuntu 20.04)",
   "main": "index.js",
   "dependencies": {
     "node-record-lpcm16": "^1.0.1",
@@ -9,7 +9,9 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node ./index.js",
+    "start": "node index.js",
+    "startFromMic": "node indexFromMic.js",
+    "startFromRtmp": "node indexFromRtmp.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "nextsigner",

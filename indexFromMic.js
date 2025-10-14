@@ -29,6 +29,7 @@ console.log("==========================================");
 console.log(`🎤 Modelo Vosk cargado: ${MODEL_PATH}`);
 console.log(`🎧 Tasa de muestreo requerida: ${SAMPLE_RATE} Hz`);
 console.log("📣 ¡Empieza a hablar! (Ctrl+C para salir)");
+console.log("Si quieres recibir audio desde RTMP, ejecuta este proyecto mediante npm run startFromRtmp");
 console.log("==========================================");
 
 const recording = record.record({
